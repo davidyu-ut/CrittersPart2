@@ -53,6 +53,9 @@ public abstract class Critter {
 	 */
 	protected final String look(int direction, boolean steps) {
 		ArrayList<Integer> xyPair;
+		// TODO: where to check if this is dead
+		this.energy -= Params.look_energy_cost;
+		
 		// Look 1 position ahead
 		if (!steps) {
 			xyPair = calculatePos(this, direction, "walk");
@@ -321,7 +324,7 @@ public abstract class Critter {
 	 */
 	public static void makeCritter(String critter_class_name) throws InvalidCritterException {
 		try {
-			Class critter = Class.forName("assignment4." + critter_class_name);
+			Class critter = Class.forName("assignment5." + critter_class_name);
 			Critter newCritter = (Critter)critter.newInstance();
 			population.add(newCritter);	// Add newly created critter to population
 		

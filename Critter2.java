@@ -89,17 +89,25 @@ public class Critter2 extends Critter {
 			return true;
 		}
 		
+		int dir = getRandomInt(8);
 		// Try to run away
 		if (this.getEnergy() > Params.run_energy_cost) {
-			
-			run(getRandomInt(8));
+			// TODO: check if this works
+			// Intended position is unoccupied
+			if (this.look(dir, true) == null) {
+				run(dir);
+			}
 			ran = true;
 			walked = false;
 			return false;
 		} 
 		// Try to walk away
 		else if (this.getEnergy() > Params.walk_energy_cost) {
-			walk(getRandomInt(8));
+			// TODO: check if this works
+			// Intended position is unoccupied
+			if (this.look(dir, false) == null) {
+				walk(getRandomInt(8));
+			}
 			walked = true;
 			ran = false;
 			return false;
