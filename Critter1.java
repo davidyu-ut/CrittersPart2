@@ -126,10 +126,12 @@ public class Critter1 extends Critter {
 		return critter1s.size() + " total Critter1s\n" + "Average energy of current Critter1s: " + avgEnergy + "\n" + "Highest energy record: " + highestEnergy + "\n";
 	}
 
-
+	
 	@Override
 	public CritterShape viewShape() {
-		// TODO Auto-generated method stub
-		return null;
+		return CritterShape.DIAMOND;
 	}
+	
+	public javafx.scene.paint.Color viewOutlineColor() { return javafx.scene.paint.Color.BLACK; }
+	public javafx.scene.paint.Color viewFillColor() { return javafx.scene.paint.Color.RED; }
 }

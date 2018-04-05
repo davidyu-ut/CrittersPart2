@@ -3,6 +3,15 @@ package assignment5;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import javafx.collections.*;
+
 public abstract class Critter {
 	/* NEW FOR PROJECT 5 */
 	public enum CritterShape {
@@ -603,7 +612,18 @@ public abstract class Critter {
 	 * This method prints to standard output the grid and all alive Critters 
 	 */
 	public static void displayWorld() {
+		Main.grid.getChildren().clear();	// Clear grid
+		Painter.paintGridLines(Main.grid);	// Paint gridlines
 		
+		// Place Critters on grid
+		for (Critter currCritter : population) {
+			Painter.paintCritter(currCritter, currCritter.x_coord, currCritter.y_coord);
+		}
+		
+		System.out.println("Num of critters: " + population.size());	// TODO: remove once done
+		
+		
+		/*
 		// Initialize 2D grid with single space " "
 		String[][] grid = new String[Params.world_height][Params.world_width]; 
 		for (int row = 0; row < Params.world_height; row++) {
@@ -639,6 +659,7 @@ public abstract class Critter {
 			System.out.print("-");
 		}
 		System.out.println("+");
+		*/
 	}
 
 }

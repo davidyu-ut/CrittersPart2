@@ -15,8 +15,10 @@ package assignment5;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
-
+import javafx.scene.shape.Polygon;
+import assignment5.Critter.CritterShape;
 import javafx.scene.layout.GridPane;
+import javafx.scene.Group;
 import javafx.scene.paint.*;
 
 public class Painter {
@@ -46,14 +48,78 @@ public class Painter {
 	/*
 	 * Paints the shape on a grid.
 	 */
-	public static void paint(GridPane grid) {
-		Main.grid.getChildren().clear(); // clean up grid.
-		paintGridLines(grid);
+	public static void paintCritter(Critter crit, int x, int y) {
+		//Main.grid.getChildren().clear(); // clean up grid.
+		//paintGridLines(grid);
 		
+		Shape critShape = null;
+		Polygon critPoly = null;
+		
+		switch (crit.viewShape()) {
+		case CIRCLE:
+			critShape = new Circle(size/2); 
+			critShape.setFill(crit.viewFillColor());
+			critShape.setStroke(crit.viewOutlineColor());
+			Main.grid.add(critShape, x, y); break;
+		case SQUARE:
+			critShape = new Rectangle(size, size); 
+			critShape.setFill(crit.viewFillColor());
+			critShape.setStroke(crit.viewOutlineColor());
+			Main.grid.add(critShape, x, y); break;
+		case TRIANGLE:
+			critPoly = new Polygon();
+			/*
+			critPoly.getPoints().addAll(
+					75.0, 0.0,
+					0.0, 150.0,
+					150.0, 150.0
+			);
+			*/
+			critPoly.getPoints().addAll(
+					(double) (size/2), 0.0,
+					0.0, (double) (size),
+					(double) (size), (double) (size)
+ 			);
+			critPoly.setFill(crit.viewFillColor());
+			critPoly.setStroke(crit.viewOutlineColor());
+			Main.grid.add(critPoly, x, y); break;
+		case DIAMOND:
+			critPoly = new Polygon();
+			critPoly.getPoints().addAll(
+					0.0, (double) (size/2),
+					(double) (size/2), 0.0,
+					(double) (size), (double) (size/2),
+					(double) (size/2), (double) (size)
+			);
+			critPoly.setFill(crit.viewFillColor());
+			critPoly.setStroke(crit.viewOutlineColor());
+			Main.grid.add(critPoly, x, y); break;
+		case STAR:
+			critPoly = new Polygon();
+			critPoly.getPoints().addAll(
+					0.0, (double) Math.floor(size/3),
+					(double) Math.floor(size/3), (double) Math.floor(size/3),
+					(double) Math.floor(size/2), 0.0,
+					(double) Math.floor(2*size/3), (double) Math.floor(size/3),
+					(double) (size), (double) Math.floor(size/3),
+					(double) Math.floor(2*size/3), (double) Math.floor(7*size/12),
+					(double) (size), (double) (size),
+					(double) Math.floor(size/2), (double) Math.floor(2*size/3),
+					0.0, (double) (size),
+					(double) Math.floor(size/3), (double) Math.floor(7*size/12),
+					0.0, (double) Math.floor(size/3)
+			);
+			critPoly.setFill(crit.viewFillColor());
+			critPoly.setStroke(crit.viewOutlineColor());
+			Main.grid.add(critPoly, x, y); break;
+		default:
+			break;
+		}
 	}
 	
 	// Paints grid lines
-	private static void paintGridLines(GridPane grid) {
+	public static void paintGridLines(GridPane grid) {
+		Main.grid.getChildren().clear(); // clean up grid.
 		for (int row = 0; row < numRows; row++) {
 			for (int col = 0; col < numCols; col++) {
 				Shape sector = new Rectangle(size, size);
