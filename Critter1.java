@@ -110,6 +110,9 @@ public class Critter1 extends Critter {
 	 */
 	public static String runStats(java.util.List<Critter> critter1s) {
 		//String statStr = new String();
+		if(critter1s.size() < 1) {
+			return "total Critter1s: 0";
+		}
 		int avgEnergy = 0;
 		for (Object obj : critter1s) {
 			Critter1 currCritter1 = (Critter1) obj;
@@ -123,7 +126,7 @@ public class Critter1 extends Critter {
 		System.out.println("Highest energy record: " + highestEnergy);
 		*/
 		
-		return critter1s.size() + " total Critter1s\n" + "Average energy of current Critter1s: " + avgEnergy + "\n" + "Highest energy record: " + highestEnergy + "\n";
+		return critter1s.size() + " total Critter1s --- " + "Average energy of current Critter1s: " + avgEnergy + " --- " + "Highest energy record: " + highestEnergy;
 	}
 
 	

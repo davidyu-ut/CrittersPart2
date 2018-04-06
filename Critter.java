@@ -623,6 +623,7 @@ public abstract class Critter {
 		System.out.println("Num of critters: " + population.size());	// TODO: remove once done
 		
 		
+		
 		/*
 		// Initialize 2D grid with single space " "
 		String[][] grid = new String[Params.world_height][Params.world_width]; 

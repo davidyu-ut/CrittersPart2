@@ -1,12 +1,8 @@
 package assignment5;
 	
-import java.awt.Insets;
-import java.awt.Rectangle;
 import java.io.File;
 import java.util.HashMap;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
 
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -29,6 +25,8 @@ import javafx.animation.Timeline;
 public class Main extends Application {
 	static GridPane grid = new GridPane();
 	static Boolean isStepping = new Boolean(false);
+	static HashMap<String, Integer> statLoc = new HashMap<String, Integer>();
+	static Group statGroup = new Group();
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -45,10 +43,10 @@ public class Main extends Application {
 			btnStage.setTitle("Button Stage");
 			btnStage.show();
 			Pane btnPane = new Pane();
-			Scene btnScene = new Scene(btnPane, 300, 250);
+			Scene btnScene = new Scene(btnPane, 490, 300);
 			Label notification = new Label();			// Node to place error messages
-			notification.setLayoutX(0);	
-			notification.setLayoutY(230);
+			notification.setLayoutX(2);	
+			notification.setLayoutY(283);
 			btnPane.getChildren().add(notification);
 			
 			// Manual "step" button
@@ -84,6 +82,14 @@ public class Main extends Application {
 	        		
 	        		//Display world
 	        		Critter.displayWorld();
+	        		
+	        		//Update stats
+	        		btnPane.getChildren().removeAll(statGroup);
+	        		statGroup.getChildren().clear();
+	        		for (String key : statLoc.keySet()) {
+	        			specificStats(key, btnPane);
+	        		}
+					btnPane.getChildren().addAll(statGroup);
 					
 				} catch (NumberFormatException nfe) {
 					notification.setText("Invalid number of steps");
@@ -92,20 +98,13 @@ public class Main extends Application {
 				}
 			});
 			
-			// "stats" button
-			Text statsText = new Text();
-			statsText.setText("Stats for Critters");
-			statsText.setLayoutX(2);
-			statsText.setLayoutY(105);
-			btnPane.getChildren().add(statsText);
-			MenuButton selectStats = new MenuButton();			// Holds which critters stats to display
-			HashMap<String, Boolean> statsShowing = new HashMap<String, Boolean>();		// Keeps track of already showing stats
-			Stage statsStage = new Stage();		// Stage for showing stats
-			statsStage.setTitle("Stats Stage");
-			//statsStage.show();
-			Pane statsPane = new Pane();
-			Scene statsScene = new Scene(statsPane, 300, 250);
-			statsStage.setScene(statsScene);
+			// "stats" display
+			Text critStats = new Text();
+			critStats.setText("Stats for Critters:");
+			critStats.setLayoutX(2);
+			critStats.setLayoutY(130);
+			btnPane.getChildren().add(critStats);
+
 			
 			// Automatic "step" button
 			Button autoStep = new Button("Auto step");
@@ -165,6 +164,14 @@ public class Main extends Application {
 								} break;
 							}
 							Critter.displayWorld();
+							
+			        		//Update stats
+			        		btnPane.getChildren().removeAll(statGroup);
+			        		statGroup.getChildren().clear();
+			        		for (String key : statLoc.keySet()) {
+			        			specificStats(key, btnPane);
+			        		}
+							btnPane.getChildren().addAll(statGroup);
 						}
 				));
 				timeline.setCycleCount(Animation.INDEFINITE);
@@ -194,8 +201,41 @@ public class Main extends Application {
 				System.exit(0);
 			});
 			quitBtn.setLayoutX(0);
-			quitBtn.setLayoutY(200);
+			quitBtn.setLayoutY(253);
 			btnPane.getChildren().add(quitBtn);
+			
+			// "seed" button
+			Button seedBtn = new Button("Seed");
+			seedBtn.setLayoutX(0);
+			seedBtn.setLayoutY(90);
+			btnPane.getChildren().add(seedBtn);
+			TextField seedNum = new TextField("Enter long seed");		// Text field to enter seed
+			seedNum.setMaxWidth(100);
+			seedNum.setLayoutX(46);
+			seedNum.setLayoutY(90);
+			btnPane.getChildren().add(seedNum);
+			seedBtn.setOnAction(e->{
+				if (isStepping) {
+					return;		// Do nothing if already stepping
+				}
+				long seed;
+				// Make sure seed is valid
+				try {
+					seed = Integer.parseInt(seedNum.getText().trim());
+					if (seed < 1) {
+						notification.setText("Invalid seed");
+						btnStage.show();
+						return;
+					}
+					Critter.setSeed(seed);
+					notification.setText("Set seed to " + seed);
+					btnStage.show();
+				} catch (NumberFormatException nfe) {
+					notification.setText("Invalid seed");
+					btnStage.show();
+					return;
+				}
+			});
 			
 			// "make" button
 			Button makeBtn = new Button("Make");
@@ -203,6 +243,7 @@ public class Main extends Application {
 			// TODO: maybe /bin/ instead of src?
 			File dir = new File("./src/assignment5"); 	// new file obj
 			Class<?> critClass = Critter.class;
+			int statY = 130;			// Keeps track of stats
 			for (File file : dir.listFiles()) {
 				// TODO: better if-statement?
 				if ((file.getName().endsWith(".class") || file.getName().endsWith(".java")) && (!file.getName().equals("Header.java"))) {
@@ -212,21 +253,12 @@ public class Main extends Application {
 						Critter newCritter = (Critter)exCrit.newInstance();
 						if (Critter.class.isAssignableFrom(newCritter.getClass())) {
 							critOptions.add(clsName);		// Add to create options
-							CheckBox cb = new CheckBox(clsName);	// Add to stats options
-							CustomMenuItem critStats = new CustomMenuItem(cb);
-							statsShowing.put(clsName, false);		// Keeps track of which stats are showing
-							cb.setOnAction(e->{
-								//System.out.println("You clicked " + clsName);
-								if (statsShowing.get(clsName)) {	// Stats already showing, so stop showing
-									
-								} else {							// Stats not showing, so show
-									statsStage.show();
-									
-									statsShowing.put(clsName, true);
-								}
-							});
-							critStats.setHideOnClick(false);
-							selectStats.getItems().add(critStats);
+							
+							statLoc.put(clsName, statY);
+							statY += 15;
+							// Put up their stats
+							specificStats(clsName, btnPane);
+							btnPane.getChildren().addAll(statGroup);
 						}
 					} catch (Exception e) {}	
 				}
@@ -238,9 +270,6 @@ public class Main extends Application {
 			critterCombo.setLayoutX(50);
 			critterCombo.setLayoutY(0);
 			btnPane.getChildren().add(critterCombo);
-			selectStats.setLayoutX(90);
-			selectStats.setLayoutY(90);
-			btnPane.getChildren().add(selectStats);
 			
 			TextField makeNum = new TextField("1");		// Text field to enter number of critters to make
 			makeNum.setMaxWidth(50);
@@ -303,6 +332,29 @@ public class Main extends Application {
 		}
 	}
 	
+	public static void specificStats (String className, Pane btnPane) {
+		try {
+			Text stats = new Text();
+			List<Critter> instances;
+			java.lang.reflect.Method method;
+			instances = Critter.getInstances(className);
+			Class critter = Class.forName("assignment5." + className);
+			Critter dummyCritter = (Critter)critter.newInstance();
+			
+			// Use reflection to call custom Critter's runStats method
+			Class[] cArg = new Class[1];
+			cArg[0] = List.class;
+			method = dummyCritter.getClass().getMethod("runStats", cArg);
+			stats.setText((String) method.invoke(dummyCritter, instances));
+			stats.setLayoutX(2);
+			stats.setLayoutY(statLoc.get(className));
+			
+			statGroup.getChildren().add(stats);
+			
+		} catch (Exception e) {
+			System.out.println("Cannot get stats for " + className);
+		}
+	}
 	
 	public static void main(String[] args) {
 		launch(args);

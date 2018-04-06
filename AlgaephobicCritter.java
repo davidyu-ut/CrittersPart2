@@ -34,7 +34,7 @@ public class AlgaephobicCritter extends Critter {
 		return;
 	}
 
-	public static String runStats2(java.util.List<Critter> avoidingCritters) {
+	public static String runStats(java.util.List<Critter> avoidingCritters) {
 		if(avoidingCritters.size() != 0) {
 			return "So far so good";
 		}

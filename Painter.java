@@ -25,7 +25,7 @@ public class Painter {
 	
 	static int numRows = Params.world_height;
 	static int numCols = Params.world_width;
-	static int size = 600 / numRows;	//TODO: mess around with this num?
+	static int size = 700 / (Math.max(numRows, numCols));	//TODO: mess around with this num? originally 600 / numRows
 
 	/*
 	 * Returns a square or a circle, according to shapeIndex
@@ -57,28 +57,21 @@ public class Painter {
 		
 		switch (crit.viewShape()) {
 		case CIRCLE:
-			critShape = new Circle(size/2); 
+			critShape = new Circle((size-1)/2); 
 			critShape.setFill(crit.viewFillColor());
 			critShape.setStroke(crit.viewOutlineColor());
 			Main.grid.add(critShape, x, y); break;
 		case SQUARE:
-			critShape = new Rectangle(size, size); 
+			critShape = new Rectangle((size-1), (size-1)); 
 			critShape.setFill(crit.viewFillColor());
 			critShape.setStroke(crit.viewOutlineColor());
 			Main.grid.add(critShape, x, y); break;
 		case TRIANGLE:
 			critPoly = new Polygon();
-			/*
 			critPoly.getPoints().addAll(
-					75.0, 0.0,
-					0.0, 150.0,
-					150.0, 150.0
-			);
-			*/
-			critPoly.getPoints().addAll(
-					(double) (size/2), 0.0,
-					0.0, (double) (size),
-					(double) (size), (double) (size)
+					(double) ((size-2)/2), 0.0,
+					0.0, (double) ((size-2)),
+					(double) ((size-2)), (double) ((size-2))
  			);
 			critPoly.setFill(crit.viewFillColor());
 			critPoly.setStroke(crit.viewOutlineColor());
@@ -86,10 +79,10 @@ public class Painter {
 		case DIAMOND:
 			critPoly = new Polygon();
 			critPoly.getPoints().addAll(
-					0.0, (double) (size/2),
-					(double) (size/2), 0.0,
-					(double) (size), (double) (size/2),
-					(double) (size/2), (double) (size)
+					0.0, (double) ((size-2)/2),
+					(double) ((size-2)/2), 0.0,
+					(double) ((size-2)), (double) ((size-2)/2),
+					(double) ((size-2)/2), (double) ((size-2))
 			);
 			critPoly.setFill(crit.viewFillColor());
 			critPoly.setStroke(crit.viewOutlineColor());
@@ -97,17 +90,17 @@ public class Painter {
 		case STAR:
 			critPoly = new Polygon();
 			critPoly.getPoints().addAll(
-					0.0, (double) Math.floor(size/3),
-					(double) Math.floor(size/3), (double) Math.floor(size/3),
-					(double) Math.floor(size/2), 0.0,
-					(double) Math.floor(2*size/3), (double) Math.floor(size/3),
-					(double) (size), (double) Math.floor(size/3),
-					(double) Math.floor(2*size/3), (double) Math.floor(7*size/12),
-					(double) (size), (double) (size),
-					(double) Math.floor(size/2), (double) Math.floor(2*size/3),
-					0.0, (double) (size),
-					(double) Math.floor(size/3), (double) Math.floor(7*size/12),
-					0.0, (double) Math.floor(size/3)
+					0.0, (double) Math.floor((size-5)/3),
+					(double) Math.floor((size-5)/3), (double) Math.floor((size-5)/3),
+					(double) Math.floor((size-5)/2), 0.0,
+					(double) Math.floor(2*(size-5)/3), (double) Math.floor((size-5)/3),
+					(double) ((size-5)), (double) Math.floor((size-5)/3),
+					(double) Math.floor(2*(size-5)/3), (double) Math.floor(7*(size-5)/12),
+					(double) ((size-5)), (double) ((size-5)),
+					(double) Math.floor((size-5)/2), (double) Math.floor(2*(size-5)/3),
+					0.0, (double) ((size-5)),
+					(double) Math.floor((size-5)/3), (double) Math.floor(7*(size-5)/12),
+					0.0, (double) Math.floor((size-5)/3)
 			);
 			critPoly.setFill(crit.viewFillColor());
 			critPoly.setStroke(crit.viewOutlineColor());

@@ -54,7 +54,7 @@ public class Critter2 extends Critter {
 		}
 		if (((this.getEnergy() + compensation) > prevEnergy) && (this.getEnergy() >= Params.min_reproduce_energy)) {
 			try {
-				Class critter = Class.forName("assignment4.Critter2");
+				Class critter = Class.forName("assignment5.Critter2");
 				Critter childCritter = (Critter)critter.newInstance();
 				reproduce(childCritter, getRandomInt(8));
 				numChildren++;
@@ -141,7 +141,7 @@ public class Critter2 extends Critter {
 		System.out.println(critter2s.size() + " total Critter2s");
 		System.out.println("Number of naturally reproduced Critter2s: " + totNumChildren);
 		
-		return critter2s.size() + " total Critter2s\n" + "Number of naturally reproduced Critter2s: " + totNumChildren + "\n";
+		return critter2s.size() + " total Critter2s --- " + "Number of naturally reproduced Critter2s: " + totNumChildren;
 	}
 
 	@Override
